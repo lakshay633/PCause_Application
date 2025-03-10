@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:login_authentcation/Pages/animation.dart';
 import 'package:login_authentcation/user/change_paasword.dart';
+import 'package:login_authentcation/user/profile.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
