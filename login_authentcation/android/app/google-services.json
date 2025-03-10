@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "365538692306",
+    "project_id": "pcause-843ae",
+    "storage_bucket": "pcause-843ae.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365538692306:android:afe6edf39ff93fdfecf10b",
+        "android_client_info": {
+          "package_name": "com.example.login_authentcation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXTtZOHIAq-tPSVfnVfFZekpD0i2Wah48"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
