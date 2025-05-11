@@ -1,212 +1,8 @@
-// // import 'package:cloud_firestore/cloud_firestore.dart';
-// // import 'package:firebase_auth/firebase_auth.dart';
-// // import 'package:firebase_storage/firebase_storage.dart';
-// // import 'package:flutter/material.dart';
-// // import 'package:login_authentcation/Pages/login.dart';
-// // import 'package:login_authentcation/user/change_paasword.dart';
-
-// // class Profile extends StatefulWidget {
-// //   Profile({Key? key}) : super(key: key);
-
-// //   @override
-// //   _ProfileState createState() => _ProfileState();
-// // }
-
-// // class _ProfileState extends State<Profile> {
-// //   final FirebaseAuth _auth = FirebaseAuth.instance;
-// //   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-// //   final FirebaseStorage _storage = FirebaseStorage.instance;
-
-// //   User? user;
-// //   String? email;
-// //   DateTime? creationTime;
-
-// //   @override
-// //   void initState() {
-// //     super.initState();
-// //     loadUserData();
-// //   }
-
-// //   void loadUserData() {
-// //     user = _auth.currentUser;
-// //     setState(() {
-// //       email = user?.email;
-// //       creationTime = user?.metadata.creationTime;
-// //     });
-// //   }
-
-// //   Future<void> verifyEmail() async {
-// //     if (user != null) {
-// //       await user!.sendEmailVerification();
-// //       ScaffoldMessenger.of(context).showSnackBar(
-// //         SnackBar(content: Text('Verification email sent!')),
-// //       );
-// //     }
-// //   }
-
-// //   Future<void> deleteAccount() async {
-// //     try {
-// //       if (user == null) return;
-// //       await _firestore.collection('users').doc(user!.uid).delete();
-// //       try {
-// //         await _storage.ref('profile_images/${user!.uid}.jpg').delete();
-// //       } catch (e) {
-// //         print("No profile image found.");
-// //       }
-// //       await user!.delete();
-// //       await _auth.signOut();
-// //       ScaffoldMessenger.of(context).showSnackBar(
-// //         SnackBar(content: Text("Account deleted successfully.")),
-// //       );
-// //       Navigator.pushReplacement(
-// //           context, MaterialPageRoute(builder: (context) => Login()));
-// //     } catch (e) {
-// //       ScaffoldMessenger.of(context).showSnackBar(
-// //         SnackBar(content: Text("Failed to delete account: ${e.toString()}")),
-// //       );
-// //     }
-// //   }
-
-// //   void confirmDeleteAccount() {
-// //     showDialog(
-// //       context: context,
-// //       builder: (BuildContext context) {
-// //         return AlertDialog(
-// //           title: Text("Delete Account"),
-// //           content: Text("Are you sure you want to delete your account?"),
-// //           actions: [
-// //             TextButton(
-// //               child: Text("Cancel"),
-// //               onPressed: () => Navigator.of(context).pop(),
-// //             ),
-// //             TextButton(
-// //               child: Text("Delete", style: TextStyle(color: Colors.red)),
-// //               onPressed: () {
-// //                 Navigator.of(context).pop();
-// //                 deleteAccount();
-// //               },
-// //             ),
-// //           ],
-// //         );
-// //       },
-// //     );
-// //   }
-
-// //   Future<void> logout() async {
-// //     await _auth.signOut();
-// //     Navigator.pushReplacement(
-// //         context, MaterialPageRoute(builder: (context) => Login()));
-// //   }
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return Scaffold(
-// //       appBar: AppBar(
-// //         title: Text(
-// //           "Profile",
-// //           style: TextStyle(
-// //               fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
-// //         ),
-// //         backgroundColor: Colors.white,
-// //         elevation: 0,
-// //       ),
-// //       body: SingleChildScrollView(
-// //         child: Container(
-// //           decoration: BoxDecoration(
-// //             gradient: LinearGradient(
-// //               begin: Alignment.topLeft,
-// //               end: Alignment.bottomRight,
-// //               colors: [Colors.pink.shade300, Colors.blue.shade300],
-// //             ),
-// //           ),
-// //           child: Padding(
-// //             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-// //             child: Column(
-// //               crossAxisAlignment: CrossAxisAlignment.center,
-// //               children: [
-// //                 Icon(Icons.account_circle, size: 100, color: Colors.white),
-// //                 SizedBox(height: 20),
-// //                 buildProfileCard(),
-// //                 SizedBox(height: 30),
-// //                 buildButton("Change Password", Colors.green, () {
-// //                   Navigator.push(
-// //                       context,
-// //                       MaterialPageRoute(
-// //                           builder: (context) => ChangePassword()));
-// //                 }),
-// //                 SizedBox(height: 10),
-// //                 buildButton("Delete Account", Colors.red, confirmDeleteAccount),
-// //                 SizedBox(height: 10),
-// //                 buildButton("Logout", Colors.blue, logout),
-// //               ],
-// //             ),
-// //           ),
-// //         ),
-// //       ),
-// //     );
-// //   }
-
-// //   Widget buildProfileCard() {
-// //     bool isVerified = user?.emailVerified ?? false;
-// //     return Container(
-// //       width: double.infinity,
-// //       child: Card(
-// //         shape: RoundedRectangleBorder(
-// //           borderRadius: BorderRadius.circular(15),
-// //         ),
-// //         elevation: 5,
-// //         margin: EdgeInsets.symmetric(vertical: 8),
-// //         child: Padding(
-// //           padding: EdgeInsets.all(20),
-// //           child: Column(
-// //             crossAxisAlignment: CrossAxisAlignment.start,
-// //             children: [
-// //               Text("Email:",
-// //                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-// //               Text(email ?? "N/A", style: TextStyle(fontSize: 16)),
-// //               SizedBox(height: 10),
-// //               Text("Created On:",
-// //                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-// //               Text(creationTime?.toLocal().toString() ?? "N/A",
-// //                   style: TextStyle(fontSize: 16)),
-// //               SizedBox(height: 10),
-// //               Text(
-// //                 isVerified ? "User already verified" : "Verify your email",
-// //                 style: TextStyle(
-// //                   fontSize: 16,
-// //                   fontWeight: FontWeight.bold,
-// //                   color: isVerified ? Colors.green : Colors.red,
-// //                 ),
-// //               ),
-// //             ],
-// //           ),
-// //         ),
-// //       ),
-// //     );
-// //   }
-
-// //   Widget buildButton(String text, Color color, VoidCallback onPressed) {
-// //     return SizedBox(
-// //       width: double.infinity,
-// //       height: 50,
-// //       child: ElevatedButton(
-// //         style: ElevatedButton.styleFrom(
-// //           primary: color,
-// //           shape: RoundedRectangleBorder(
-// //             borderRadius: BorderRadius.circular(10),
-// //             side: BorderSide(color: Colors.white, width: 0.5),
-// //           ),
-// //         ),
-// //         onPressed: onPressed,
-// //         child: Text(text, style: TextStyle(fontSize: 16, color: Colors.white)),
-// //       ),
-// //     );
-// //   }
-// // }import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
 // import 'package:flutter/material.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+
 // import 'package:login_authentcation/Pages/login.dart';
 // import 'package:login_authentcation/user/change_paasword.dart';
 
@@ -220,10 +16,9 @@
 // class _ProfileState extends State<Profile> {
 //   final FirebaseAuth _auth = FirebaseAuth.instance;
 //   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-//   final FirebaseStorage _storage = FirebaseStorage.instance;
 //   User? user;
-//   String? email;
-//   DateTime? creationTime;
+//   String? email, name = "Anonymous";
+//   int? age;
 
 //   @override
 //   void initState() {
@@ -231,64 +26,72 @@
 //     loadUserData();
 //   }
 
-//   void loadUserData() {
+//   Future<void> loadUserData() async {
 //     user = _auth.currentUser;
+//     if (user != null) {
+//       await user!.reload();
+//       user = _auth.currentUser;
+
+//       SharedPreferences prefs = await SharedPreferences.getInstance();
+//       setState(() {
+//         email = user!.email ?? "Not available";
+//         name = prefs.getString('name') ?? "Anonymous";
+//         age = prefs.getInt('age') ?? null;
+//       });
+//     }
+//   }
+
+//   void updateUserData(String newName, int newAge) async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     await prefs.setString('name', newName);
+//     await prefs.setInt('age', newAge);
+
 //     setState(() {
-//       email = user?.email;
-//       creationTime = user?.metadata.creationTime;
+//       name = newName;
+//       age = newAge;
 //     });
 //   }
 
-//   Future<void> verifyEmail() async {
-//     if (user != null) {
-//       await user!.sendEmailVerification();
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Verification email sent!')),
-//       );
-//     }
-//   }
+//   void showEditDialog() {
+//     TextEditingController nameController = TextEditingController(text: name);
+//     TextEditingController ageController =
+//         TextEditingController(text: age?.toString() ?? "");
 
-//   Future<void> deleteAccount() async {
-//     try {
-//       if (user == null) return;
-//       await _firestore.collection('users').doc(user!.uid).delete();
-//       try {
-//         await _storage.ref('profile_images/${user!.uid}.jpg').delete();
-//       } catch (e) {
-//         print("No profile image found.");
-//       }
-//       await user!.delete();
-//       await _auth.signOut();
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text("Account deleted successfully.")),
-//       );
-//       Navigator.pushReplacement(
-//           context, MaterialPageRoute(builder: (context) => Login()));
-//     } catch (e) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text("Failed to delete account: ${e.toString()}")),
-//       );
-//     }
-//   }
-
-//   void confirmDeleteAccount() {
 //     showDialog(
 //       context: context,
-//       builder: (BuildContext context) {
+//       builder: (context) {
 //         return AlertDialog(
-//           title: Text("Delete Account"),
-//           content: Text("Are you sure you want to delete your account?"),
+//           title: Text("Edit Profile"),
+//           content: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               TextField(
+//                 controller: nameController,
+//                 decoration: InputDecoration(labelText: "Enter Name"),
+//               ),
+//               TextField(
+//                 controller: ageController,
+//                 decoration: InputDecoration(labelText: "Enter Age"),
+//                 keyboardType: TextInputType.number,
+//               ),
+//             ],
+//           ),
 //           actions: [
 //             TextButton(
+//               onPressed: () {
+//                 Navigator.pop(context);
+//               },
 //               child: Text("Cancel"),
-//               onPressed: () => Navigator.of(context).pop(),
 //             ),
 //             TextButton(
-//               child: Text("Delete", style: TextStyle(color: Colors.red)),
 //               onPressed: () {
-//                 Navigator.of(context).pop();
-//                 deleteAccount();
+//                 updateUserData(
+//                   nameController.text,
+//                   int.tryParse(ageController.text) ?? 0,
+//                 );
+//                 Navigator.pop(context);
 //               },
+//               child: Text("Save"),
 //             ),
 //           ],
 //         );
@@ -296,51 +99,30 @@
 //     );
 //   }
 
-//   Future<void> logout() async {
+//   void deleteAccount() async {
+//     try {
+//       await _firestore.collection('users').doc(user!.uid).delete();
+//       await user!.delete();
+//       Navigator.pushReplacement(
+//           context, MaterialPageRoute(builder: (context) => Login()));
+//     } catch (e) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text("Error deleting account: $e")),
+//       );
+//     }
+//   }
+
+//   void logout() async {
 //     await _auth.signOut();
 //     Navigator.pushReplacement(
 //         context, MaterialPageRoute(builder: (context) => Login()));
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Container(
-//         decoration: BoxDecoration(
-//           gradient: LinearGradient(
-//             begin: Alignment.topCenter,
-//             end: Alignment.bottomCenter,
-//             colors: [Colors.pink.shade400, Colors.blue.shade700],
-//           ),
-//         ),
-//         child: Padding(
-//           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: [
-//               Icon(Icons.account_circle, size: 100, color: Colors.white),
-//               SizedBox(height: 20),
-//               buildProfileCard(),
-//               SizedBox(height: 30),
-//               buildButton("Change Password", Colors.green, () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => ChangePassword()));
-//               }),
-//               SizedBox(height: 10),
-//               buildButton("Delete Account", Colors.red, confirmDeleteAccount),
-//               SizedBox(height: 10),
-//               buildButton("Logout", Colors.blue, logout),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
 //   }
 
 //   Widget buildProfileCard() {
 //     bool isVerified = user?.emailVerified ?? false;
 //     return Container(
 //       width: double.infinity,
+//       height: 400,
 //       child: Card(
 //         shape: RoundedRectangleBorder(
 //           borderRadius: BorderRadius.circular(15),
@@ -351,23 +133,54 @@
 //         child: Padding(
 //           padding: EdgeInsets.all(20),
 //           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
 //             crossAxisAlignment: CrossAxisAlignment.start,
 //             children: [
-//               Text("Email:",
+//               Center(
+//                 child: CircleAvatar(
+//                   radius: 50,
+//                   backgroundImage: AssetImage("assets/images.png"),
+//                 ),
+//               ),
+//               SizedBox(height: 20),
+//               Text("Name: ",
 //                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-//               Text(email ?? "N/A", style: TextStyle(fontSize: 16)),
-//               SizedBox(height: 10),
-//               Text("Created On:",
+//               Text(name ?? "Anonymous", style: TextStyle(fontSize: 16)),
+//               SizedBox(height: 5),
+//               Text("Age: ",
 //                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-//               Text(creationTime?.toLocal().toString() ?? "N/A",
+//               Text(age != null ? age.toString() : "Unknown",
 //                   style: TextStyle(fontSize: 16)),
+//               SizedBox(height: 5),
+//               Text("Email: ",
+//                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+//               Text(email ?? "Not available", style: TextStyle(fontSize: 16)),
 //               SizedBox(height: 10),
-//               Text(
-//                 isVerified ? "User already verified" : "Verify your email",
-//                 style: TextStyle(
-//                   fontSize: 16,
-//                   fontWeight: FontWeight.bold,
-//                   color: isVerified ? Colors.green : Colors.red,
+//               Center(
+//                 child: IconButton(
+//                   icon: Icon(Icons.edit),
+//                   onPressed: showEditDialog,
+//                 ),
+//               ),
+//               SizedBox(height: 10),
+//               Center(
+//                 child: GestureDetector(
+//                   onTap: () async {
+//                     if (!isVerified) {
+//                       await user?.sendEmailVerification();
+//                       ScaffoldMessenger.of(context).showSnackBar(
+//                         SnackBar(content: Text("Verification email sent!")),
+//                       );
+//                     }
+//                   },
+//                   child: Text(
+//                     isVerified ? "User already verified" : "Verify your email",
+//                     style: TextStyle(
+//                       fontSize: 16,
+//                       fontWeight: FontWeight.bold,
+//                       color: isVerified ? Colors.green : Colors.red,
+//                     ),
+//                   ),
 //                 ),
 //               ),
 //             ],
@@ -394,12 +207,50 @@
 //       ),
 //     );
 //   }
-// }
 
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Center(
+//         child: Container(
+//           decoration: BoxDecoration(
+//             gradient: LinearGradient(
+//               begin: Alignment.topCenter,
+//               end: Alignment.bottomCenter,
+//               colors: [Colors.pink.shade400, Colors.blue.shade700],
+//             ),
+//           ),
+//           child: Padding(
+//             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                 buildProfileCard(),
+//                 SizedBox(height: 20),
+//                 buildButton("Change Password", Colors.green, () {
+//                   Navigator.push(
+//                       context,
+//                       MaterialPageRoute(
+//                           builder: (context) => ChangePassword()));
+//                 }),
+//                 SizedBox(height: 10),
+//                 buildButton("Delete Account", Colors.red, deleteAccount),
+//                 SizedBox(height: 10),
+//                 buildButton("Logout", Colors.blue, logout),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:login_authentcation/Pages/login.dart';
 import 'package:login_authentcation/user/change_paasword.dart';
 
@@ -413,10 +264,9 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
   User? user;
-  String? email;
-  DateTime? creationTime;
+  String? email, name = "Anonymous";
+  int? age;
 
   @override
   void initState() {
@@ -424,141 +274,69 @@ class _ProfileState extends State<Profile> {
     loadUserData();
   }
 
-  void loadUserData() {
+  Future<void> loadUserData() async {
     user = _auth.currentUser;
-    setState(() {
-      email = user?.email;
-      creationTime = user?.metadata.creationTime;
-    });
-  }
-
-  Future<void> verifyEmail() async {
     if (user != null) {
-      await user!.sendEmailVerification();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Verification email sent!')),
-      );
+      await user!.reload();
+      user = _auth.currentUser;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        email = user!.email ?? "Not available";
+        name = prefs.getString('name') ?? "Anonymous";
+        age = prefs.getInt('age') ?? null;
+      });
     }
   }
 
-  Future<void> deleteAccount() async {
-    try {
-      if (user == null) {
-        print("⚠️ User is null");
-        return;
-      }
-
-      // Step 1: Reauthenticate User
-      String? password = await _promptForPassword();
-      if (password == null || password.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text("Password is required to delete the account.")),
-        );
-        return;
-      }
-
-      AuthCredential credential = EmailAuthProvider.credential(
-        email: user!.email!,
-        password: password,
-      );
-
-      await user!.reauthenticateWithCredential(credential);
-      print("✅ Reauthentication successful!");
-
-      // Step 2: Delete Firestore Data
-      DocumentReference userDoc = _firestore.collection('users').doc(user!.uid);
-      await userDoc.delete().then((_) {
-        print("✅ Firestore data deleted!");
-      }).catchError((e) {
-        print("❌ Firestore delete failed: $e");
+  void updateUserData({String? newName, int? newAge}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (newName != null) {
+      await prefs.setString('name', newName);
+      setState(() {
+        name = newName;
       });
-
-      // Step 3: Delete Firebase Storage File
-      Reference storageRef = _storage.ref('profile_images/${user!.uid}.jpg');
-      await storageRef.delete().then((_) {
-        print("✅ Profile image deleted!");
-      }).catchError((e) {
-        print("⚠️ No profile image found or failed to delete: $e");
+    }
+    if (newAge != null) {
+      await prefs.setInt('age', newAge);
+      setState(() {
+        age = newAge;
       });
-
-      // Step 4: Delete User from Firebase Authentication
-      await user!.delete().then((_) {
-        print("✅ User account deleted from Firebase Authentication!");
-      }).catchError((e) {
-        print("❌ Account deletion failed: $e");
-      });
-
-      // Step 5: Logout and Redirect to Login Page
-      await _auth.signOut();
-      print("✅ User logged out!");
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Login()),
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Account deleted successfully.")),
-      );
-    } catch (e) {
-      print("❌ Error in account deletion: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to delete account: ${e.toString()}")),
-      );
     }
   }
 
-  Future<String?> _promptForPassword() async {
-    String? password;
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        TextEditingController passwordController = TextEditingController();
-        return AlertDialog(
-          title: Text("Enter Password"),
-          content: TextField(
-            controller: passwordController,
-            obscureText: true,
-            decoration: InputDecoration(labelText: "Password"),
-          ),
-          actions: [
-            TextButton(
-              child: Text("Cancel"),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            TextButton(
-              child: Text("Confirm"),
-              onPressed: () {
-                password = passwordController.text;
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+  void showEditDialog(String fieldType) {
+    TextEditingController controller = TextEditingController(
+      text: fieldType == "Name" ? name : age?.toString() ?? "",
     );
-    return password;
-  }
 
-  void confirmDeleteAccount() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
-          title: Text("Delete Account"),
-          content: Text("Are you sure you want to delete your account?"),
+          title: Text("Edit $fieldType"),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(labelText: "Enter $fieldType"),
+            keyboardType: fieldType == "Age" ? TextInputType.number : null,
+          ),
           actions: [
             TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
               child: Text("Cancel"),
-              onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
-              child: Text("Delete", style: TextStyle(color: Colors.red)),
               onPressed: () {
-                Navigator.of(context).pop();
-                deleteAccount();
+                if (fieldType == "Name") {
+                  updateUserData(newName: controller.text);
+                } else {
+                  updateUserData(newAge: int.tryParse(controller.text) ?? 0);
+                }
+                Navigator.pop(context);
               },
+              child: Text("Save"),
             ),
           ],
         );
@@ -566,84 +344,95 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Future<void> logout() async {
-    await _auth.signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Login()),
-    );
+  void deleteAccount() async {
+    try {
+      await _firestore.collection('users').doc(user!.uid).delete();
+      await user!.delete();
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Login()));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error deleting account: $e")),
+      );
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.pink.shade400, Colors.blue.shade700],
-          ),
+  void logout() async {
+    await _auth.signOut();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Login()));
+  }
+
+  Widget buildProfileInfo(String label, String value, {VoidCallback? onEdit}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Row(
+          children: [
+            Expanded(
+              child: Text(value, style: TextStyle(fontSize: 16)),
+            ),
+            if (onEdit != null)
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: onEdit,
+              ),
+          ],
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(Icons.account_circle, size: 100, color: Colors.white),
-              SizedBox(height: 20),
-              buildProfileCard(),
-              SizedBox(height: 30),
-              buildButton("Change Password", Colors.green, () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ChangePassword()));
-              }),
-              SizedBox(height: 10),
-              buildButton("Delete Account", Colors.red, confirmDeleteAccount),
-              SizedBox(height: 10),
-              buildButton("Logout", Colors.blue, logout),
-            ],
-          ),
-        ),
-      ),
+        Divider(thickness: 1, color: Colors.grey.shade300),
+      ],
     );
   }
 
   Widget buildProfileCard() {
     bool isVerified = user?.emailVerified ?? false;
-    return Container(
-      width: double.infinity,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        elevation: 5,
-        margin: EdgeInsets.symmetric(vertical: 8),
-        color: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Email:",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              Text(email ?? "N/A", style: TextStyle(fontSize: 16)),
-              SizedBox(height: 10),
-              Text("Created On:",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              Text(creationTime?.toLocal().toString() ?? "N/A",
-                  style: TextStyle(fontSize: 16)),
-              SizedBox(height: 10),
-              Text(
-                isVerified ? "User already verified" : "Verify your email",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: isVerified ? Colors.green : Colors.red,
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      elevation: 5,
+      color: Colors.white,
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage("assets/images.png"),
+              ),
+            ),
+            SizedBox(height: 20),
+            buildProfileInfo("Name", name ?? "Anonymous",
+                onEdit: () => showEditDialog("Name")),
+            buildProfileInfo("Age", age != null ? age.toString() : "Unknown",
+                onEdit: () => showEditDialog("Age")),
+            buildProfileInfo("Email", email ?? "Not available"),
+            SizedBox(height: 10),
+            Center(
+              child: GestureDetector(
+                onTap: () async {
+                  if (!isVerified) {
+                    await user?.sendEmailVerification();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Verification email sent!")),
+                    );
+                  }
+                },
+                child: Text(
+                  isVerified ? "User already verified" : "Verify your email",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: isVerified ? Colors.green : Colors.red,
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -663,6 +452,51 @@ class _ProfileState extends State<Profile> {
         ),
         onPressed: onPressed,
         child: Text(text, style: TextStyle(fontSize: 16, color: Colors.white)),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.pink.shade400, Colors.blue.shade700],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                    child: Column(
+                      children: [
+                        buildProfileCard(),
+                        SizedBox(height: 20),
+                        buildButton("Change Password", Colors.green, () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChangePassword()));
+                        }),
+                        SizedBox(height: 10),
+                        buildButton(
+                            "Delete Account", Colors.red, deleteAccount),
+                        SizedBox(height: 10),
+                        buildButton("Logout", Colors.blue, logout),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

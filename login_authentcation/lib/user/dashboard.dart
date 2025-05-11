@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:login_authentcation/Pages/login.dart';
 import 'package:login_authentcation/User_pages/page1.dart';
-import 'package:login_authentcation/User_pages/page2.dart';
-import 'package:login_authentcation/User_pages/page3.dart';
+import 'package:login_authentcation/User_pages/PCOSQuestionnaire.dart';
+import 'package:login_authentcation/User_pages/analytics.dart';
 import 'package:login_authentcation/user/profile.dart';
 
 class Dashboard extends StatefulWidget {
@@ -69,11 +69,11 @@ class HomePage extends StatelessWidget {
               _buildTile(context, 'PCOS Detection', "assets/one.png",
                   PCOSDetectionPage(), screenWidth),
               SizedBox(height: screenHeight * 0.02),
-              _buildTile(context, 'Get the Analytics', "assets/two.png",
-                  Page2(), screenWidth),
+              _buildTile(context, 'Check Symptoms', "assets/three.png",
+                  PCOSQuestionnaire(), screenWidth),
               SizedBox(height: screenHeight * 0.02),
-              _buildTile(context, 'Check Symptoms', "assets/three.png", Page3(),
-                  screenWidth),
+              _buildTile(context, 'Get the Analytics', "assets/two.png",
+                  AnalyticsPage(), screenWidth),
             ],
           ),
         ),
